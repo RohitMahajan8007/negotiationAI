@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(process.cwd(), 'frontend/dist')));
 app.use(express.static(path.join(process.cwd(), 'backend/public')));
 
-app.get('*', (req, res) => {
+app.get('*name', (req, res) => {
     const paths = [
         path.join(__dirname, '../public/index.html'),
         path.join(process.cwd(), 'frontend/dist/index.html'),
