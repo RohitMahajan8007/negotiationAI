@@ -5,7 +5,7 @@
   "main": "backend/src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run install:all && cd frontend && npm run build && cd .. && mkdir -p public && mkdir -p backend/public && cp -rv frontend/dist/* public/ && cp -rv frontend/dist/* backend/public/",
+    "build": "cd frontend && npm install && npm run build && cd .. && cd backend && npm install && cd .. && mkdir -p backend/public && cp -rv frontend/dist/* backend/public/",
     "start": "node backend/src/index.js",
     "install:all": "cd frontend && npm install && cd ../backend && npm install"
   },
