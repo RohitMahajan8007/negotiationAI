@@ -9,27 +9,30 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Request Logging
+// Logging
 app.use((req, res, next) => {
     console.log(`[Cyber-Server] ${req.method} ${req.url}`);
     next();
 });
 
-// Routes
+// API Routes
 app.use('/api/negotiation', negotiationRoutes);
 app.use('/api/auth', authRoutes);
 
-// Static files for frontend
+// REDUNDANT STATIC SERVING
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(process.cwd(), 'frontend/dist')));
 app.use(express.static(path.join(process.cwd(), 'backend/public')));
+app.use(express.static(path.join(process.cwd(), 'public')));
 
-app.get('*name', (req, res) => {
+// ✅ RESILIENT ENTRY POINT RESOLVER
+app.get('*any', (req, res) => {
+    const rootPath = process.cwd();
     const paths = [
         path.join(__dirname, '../public/index.html'),
-        path.join(process.cwd(), 'frontend/dist/index.html'),
-        path.join(process.cwd(), 'backend/public/index.html'),
-        path.join(process.cwd(), 'public/index.html')
+        path.join(rootPath, 'frontend/dist/index.html'),
+        path.join(rootPath, 'backend/public/index.html'),
+        path.join(rootPath, 'public/index.html')
     ];
     
     console.log("[Cyber-Server] Entry Point Search Sequence:");
@@ -40,7 +43,8 @@ app.get('*name', (req, res) => {
             return res.sendFile(p);
         }
     }
-    res.status(404).send('System Terminal Entry Point Not Found. Check build logs.');
+    
+    res.status(404).send(`System Entry Point Not Found. Checked 4 paths. Backend Root: ${rootPath}`);
 });
 
 // Error middleware
