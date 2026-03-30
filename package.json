@@ -9,6 +9,9 @@
     "start": "node backend/src/index.js",
     "install:all": "npm install --prefix frontend && npm install --prefix backend"
   },
+  "dependencies": {
+    "dotenv": "^17.3.1"
+  },
   "keywords": [
     "ai",
     "negotiation",
