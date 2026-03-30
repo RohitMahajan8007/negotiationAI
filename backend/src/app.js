@@ -21,9 +21,22 @@ app.use('/api/auth', authRoutes);
 
 // Static files for frontend
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(process.cwd(), 'frontend/dist')));
+app.use(express.static(path.join(process.cwd(), 'backend/public')));
 
-app.get('*name', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+app.get('*', (req, res) => {
+    const paths = [
+        path.join(__dirname, '../public/index.html'),
+        path.join(process.cwd(), 'frontend/dist/index.html'),
+        path.join(process.cwd(), 'backend/public/index.html')
+    ];
+    
+    for (const p of paths) {
+        if (require('fs').existsSync(p)) {
+            return res.sendFile(p);
+        }
+    }
+    res.status(404).send('System Terminal Entry Point Not Found. Check build logs.');
 });
 
 // Error middleware
