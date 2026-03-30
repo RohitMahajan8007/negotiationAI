@@ -28,9 +28,13 @@ app.get('*name', (req, res) => {
     const paths = [
         path.join(__dirname, '../public/index.html'),
         path.join(process.cwd(), 'frontend/dist/index.html'),
-        path.join(process.cwd(), 'backend/public/index.html')
+        path.join(process.cwd(), 'backend/public/index.html'),
+        path.join(process.cwd(), 'public/index.html')
     ];
     
+    console.log("[Cyber-Server] Entry Point Search Sequence:");
+    paths.forEach(p => console.log(` - Checking: ${p} [${require('fs').existsSync(p) ? 'FOUND' : 'MISSING'}]`));
+
     for (const p of paths) {
         if (require('fs').existsSync(p)) {
             return res.sendFile(p);
