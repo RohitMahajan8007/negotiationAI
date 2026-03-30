@@ -38,4 +38,17 @@ const getAllNegotiations = () => {
     return negotiations;
 };
 
-module.exports = { getNegotiation, saveNegotiation, getNegotiationsByUserId, saveUser, findUserByEmail, findUserByUsername, getAllNegotiations };
+const deleteNegotiation = (userId) => {
+    negotiations = negotiations.filter(n => n.userId !== userId);
+};
+
+module.exports = { 
+    getNegotiation, 
+    saveNegotiation, 
+    getNegotiationsByUserId, 
+    saveUser, 
+    findUserByEmail, 
+    findUserByUsername, 
+    getAllNegotiations,
+    deleteNegotiation 
+};

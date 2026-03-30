@@ -81,30 +81,41 @@ const resetNegotiation = async (req, res) => {
     try {
         const { userId, productId } = req.body;
         
+        if (!userId || !productId) {
+            console.error("[Cyber-Server] RESET ERROR: Missing Params", { userId, productId });
+            return res.status(400).json({ success: false, message: 'Missing userId or productId' });
+        }
+
+        console.log(`[Cyber-Server] Initiating Wipe for User: ${userId}, Product: ${productId}`);
+        
         // Use case-insensitive targeting for the nuclear wipe
         const targetUserId = { $regex: new RegExp(`^${userId}$`, 'i') };
         
         // 1. Delete the Negotiation Records
-        await Negotiation.deleteMany({ userId: targetUserId, productId });
+        const deleteCount = await Negotiation.deleteMany({ userId: targetUserId, productId });
+        console.log(` - Deleted Records: ${deleteCount.deletedCount}`);
+        
         storageService.deleteNegotiation(userId);
 
         // 2. Recalculate Leaderboard Stats for this user
         const totalWins = await Negotiation.countDocuments({ userId: targetUserId, status: 'accepted' });
+        console.log(` - Remaining Wins: ${totalWins}`);
         
         if (totalWins === 0) {
-            // Delete from leaderboard if no wins left
             await Leaderboard.deleteOne({ username: targetUserId });
+            console.log(` - Removed User from Leaderboard`);
         } else {
-            // Update leaderboard with new win count
             await Leaderboard.updateOne(
                 { username: targetUserId },
                 { totalDeals: totalWins }
             );
+            console.log(` - Updated Leaderboard Count`);
         }
 
         res.status(200).json({ success: true, message: 'Log and Data wiped permanently' });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error("[Cyber-Server] CRITICAL RESET FAILURE:", err);
+        res.status(500).json({ success: false, message: err.message, stack: err.stack });
     }
 };
 
