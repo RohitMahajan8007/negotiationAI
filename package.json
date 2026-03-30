@@ -1,0 +1,20 @@
+{
+  "name": "ai-negotiation-game",
+  "version": "1.0.0",
+  "description": "Elite AI-Powered Merchant Marketplace",
+  "main": "backend/src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install && mkdir -p public && cp -r ../frontend/dist/* public/",
+    "start": "cd backend && node src/index.js",
+    "install:all": "cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": [
+    "ai",
+    "negotiation",
+    "mern",
+    "gemini"
+  ],
+  "author": "Rohit Mahajan",
+  "license": "ISC"
+}
